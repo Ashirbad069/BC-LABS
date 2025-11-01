@@ -1,0 +1,19 @@
+# BlockSim Requirements
+
+# Core dependencies for web interface:
+Flask>=2.0.0              # Web framework for frontend
+Werkzeug>=2.0.0           # WSGI utilities
+
+# Optional dependencies for enhanced features:
+# requests>=2.25.0          # For potential web API features
+# matplotlib>=3.3.0         # For blockchain visualization
+# numpy>=1.20.0             # For advanced analytics
+
+# Development dependencies:
+# pytest>=6.0.0             # Alternative testing framework
+# black>=21.0.0             # Code formatting
+# flake8>=3.8.0             # Code linting
+
+# Note: This blockchain implementation is designed to work with
+# Python 3.7+ standard library only, making it easily accessible
+# for educational purposes without complex setup requirements.

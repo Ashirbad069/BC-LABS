@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Blockchain View - BlockSim{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>
+                    <i class="fas fa-link me-2"></i>Blockchain Explorer
+                </h1>
+                <div>
+                    <span class="badge bg-primary fs-6">{{ blocks|length }} Blocks</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blockchain Visualization -->
+    <div class="row">
+        <div class="col-12">
+            {% for block in blocks %}
+            <div class="block-card card mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cube me-2"></i>Block #{{ block.index }}
+                        {% if block.index == 0 %}
+                        <span class="badge bg-success ms-2">Genesis</span>
+                        {% endif %}
+                    </h5>
+                    <small class="text-muted">{{ block.timestamp }}</small>
+                </div>
+                
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Block Data -->
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-info-circle me-2"></i>Block Information</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Index:</strong></td>
+                                    <td>{{ block.index }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Timestamp:</strong></td>
+                                    <td>{{ block.timestamp }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Nonce:</strong></td>
+                                    <td>{{ block.nonce }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <!-- Transaction Data -->
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-exchange-alt me-2"></i>Transaction Data</h6>
+                            <div class="p-3 rounded" style="background: #f8f9fa; border-left: 4px solid var(--success-color);">
+                                {% if block.index == 0 %}
+                                <em class="text-success">{{ block.data }}</em>
+                                {% else %}
+                                {% set transactions = block.data.split(' | ') %}
+                                {% for tx in transactions %}
+                                <div class="mb-1">
+                                    {% if 'Mining Reward' in tx %}
+                                    <i class="fas fa-award me-1 text-warning"></i>
+                                    <span class="text-warning">{{ tx }}</span>
+                                    {% else %}
+                                    <i class="fas fa-arrow-right me-1 text-primary"></i>
+                                    {{ tx }}
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hashes -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h6><i class="fas fa-fingerprint me-2"></i>Cryptographic Hashes</h6>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Previous Hash:</strong></label>
+                            <div class="hash-display" onclick="copyToClipboard('{{ block.previous_hash }}')">
+                                <i class="fas fa-copy me-2" style="cursor: pointer;" title="Click to copy"></i>
+                                {% if block.previous_hash == '0' %}
+                                <span class="text-muted">Genesis Block (No Previous Hash)</span>
+                                {% else %}
+                                {{ block.previous_hash }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Block Hash:</strong></label>
+                            <div class="hash-display" onclick="copyToClipboard('{{ block.hash }}')">
+                                <i class="fas fa-copy me-2" style="cursor: pointer;" title="Click to copy"></i>
+                                {{ block.hash }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chain Link Connector -->
+            {% if not loop.last %}
+            <div class="chain-link">
+                <i class="fas fa-arrow-down"></i>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Back to Dashboard -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add animation when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        const blocks = document.querySelectorAll('.block-card');
+        blocks.forEach((block, index) => {
+            block.style.opacity = '0';
+            block.style.transform = 'translateY(50px)';
+            
+            setTimeout(() => {
+                block.style.transition = 'all 0.5s ease';
+                block.style.opacity = '1';
+                block.style.transform = 'translateY(0)';
+            }, index * 200);
+        });
+    });
+</script>
+{% endblock %}
