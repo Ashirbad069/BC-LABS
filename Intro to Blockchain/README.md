@@ -1,4 +1,4 @@
-🧱 Blockchain Laboratory Records
+🧱 Introduction to Blockchain Laboratory Records
 📘 Course Overview
 
 This repository contains practical experiments and simulations conducted as part of the Blockchain Laboratory for the Bachelor of Computer Applications (BCA) program.
